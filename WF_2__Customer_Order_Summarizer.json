@@ -1,0 +1,156 @@
+{
+  "name": "WF-2: Customer Order Summarizer",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1SgliNP4kCM0T9V5U1BwDkO-1ppqjdS8IFgOktW5DH24",
+          "mode": "list",
+          "cachedResultName": "Customer Orders",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1SgliNP4kCM0T9V5U1BwDkO-1ppqjdS8IFgOktW5DH24/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1SgliNP4kCM0T9V5U1BwDkO-1ppqjdS8IFgOktW5DH24/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        -80
+      ],
+      "id": "7b9dac46-5a07-4b60-8a67-781f3ab0fb59",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "NIUjtLTpvmms0RNN",
+          "name": "Google Sheets Trigger account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are in charge of client orders. Your job is to take incoming information regarding new orders and give a nice summary that will be emailed to the team. The email should be signed off from \"Customer Success Team\"\n\nHere is the information on the client orders.\nOrder ID:{{ $json.OrderID }}\nCustoner Name:{{ $json.CustomerName }}\nProducts:{{ $json.Product }}\nQuantity:{{ $json.Quantity }}\nPrice:{{ $json.Price }}\nOrder Date:{{ $json.OrderDate }}\nStatus:{{ $json.Status }}\n\nPlease output the following parameters:\nEmail Subject\nEmail Body ",
+              "role": "system"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        60,
+        -80
+      ],
+      "id": "9996b166-fcf5-438f-833a-1a4cd9cb4511",
+      "name": "Summarizer",
+      "credentials": {
+        "openAiApi": {
+          "id": "Wpz92gS5tHENlMa7",
+          "name": "OpenAi for N8N - 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "rohithgdata@gmail.com",
+        "subject": "={{ $json.message.content['Email Subject'] }}",
+        "emailType": "text",
+        "message": "={{ $json.message.content['Email Body'] }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        420,
+        -80
+      ],
+      "id": "3c288443-eb16-4f72-8c08-fe294fd734a7",
+      "name": "Gmail",
+      "webhookId": "9fad988b-6cd1-438a-b7f0-624a721c09a4",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "1CRovldWWiSb0Zxh",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## WF-2: Customer Order Summarizer",
+        "height": 80,
+        "width": 480
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -60,
+        -240
+      ],
+      "typeVersion": 1,
+      "id": "e4ca277b-9054-43d0-857b-7b8cb51a9909",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Summarizer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Summarizer": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "38dd56c4-b7f4-4a1a-b65b-04824bf20f2c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2d2d70a2fb453af06e00a928d8941f9b9244bb70831be608328c9e9fa7d1bda3"
+  },
+  "id": "d7sxfgkqyc1SrM9Q",
+  "tags": []
+}
