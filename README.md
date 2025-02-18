@@ -18,6 +18,10 @@ This **n8n workflow**, `WF-2: Customer Order Summarizer`, automates the process 
 2. 🔍 The **Summarizer** processes the order details and formats a structured email.
 3. 📤 The email is sent to the designated recipients from the **Gmail** node.
 
+## 📷 Workflow Screenshots
+### WF-2: Customer Order Summarizer
+![WF-2 Screenshot](WF2.png)
+
 ## 🚀 Setup Instructions
 
 - 📥 **Import the workflow** into `n8n`.
